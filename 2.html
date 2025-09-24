@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Control de Medicamentos - IVG</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="2.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <h2>IVG <span>Medicamentos</span></h2>
+        </div>
+        <div class="menu">
+            <div class="menu-item active" data-target="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </div>
+            <div class="menu-item" data-target="inventory">
+                <i class="fas fa-pills"></i>
+                <span>Inventario</span>
+            </div>
+            <div class="menu-item" data-target="movements">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Movimientos</span>
+            </div>
+            <div class="menu-item" data-target="kardex">
+                <i class="fas fa-chart-line"></i>
+                <span>Kardex</span>
+            </div>
+            <div class="menu-item" data-target="alerts">
+                <i class="fas fa-bell"></i>
+                <span>Alertas</span>
+            </div>
+            <div class="menu-item" data-target="reports">
+                <i class="fas fa-file-alt"></i>
+                <span>Reportes</span>
+            </div>
+            <div class="menu-item" data-target="settings">
+                <i class="fas fa-cog"></i>
+                <span>Configuración</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div style="display: flex; align-items: center;">
+                <button class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar medicamento...">
+                </div>
+            </div>
+            <div class="user-info">
+                <i class="fas fa-bell" style="margin-right: 20px; color: #777; cursor: pointer;"></i>
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZiI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgM2MyLjIxIDAgNCAxLjc5IDQgNHMtMS43OSA0LTQgNC00LTEuNzktNC00IDEuNzktNCA0LTR6bTAgMTcuMDJjLTMuMzMgMC02LjI4LTEuNzEtOC02LjAyIDIuMDUtMS4yOSA0LjY2LTIgOC0yIDMuMzQgMCA1Ljk1LjcxIDggMi0xLjcyIDQuMzEtNC42NyA2LjAyLTggNi4wMnoiLz48L3N2Zz4=" alt="User">
+                <div>
+                    <div style="font-weight: 500;">Administrador</div>
+                    <div style="font-size: 0.8rem; color: #777;">Tópico IVG</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content">
+            <!-- Dashboard Section -->
+            <div class="page-section active" id="dashboard">
+                <div class="page-title">
+                    <h1>Dashboard - Control de Medicamentos</h1>
+                    <button class="btn btn-primary" id="addMedicationBtn">
+                        <i class="fas fa-plus"></i> Nuevo Medicamento
+                    </button>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="card-container">
+                    <div class="card">
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <h3 id="total-medicamentos">0</h3>
+                        <p>Medicamentos en Stock</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon bg-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3 id="medicamentos-estables">0</h3>
+                        <p>Medicamentos Estables</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon bg-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3 id="stock-bajo">0</h3>
+                        <p>Stock por Agotarse</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon bg-danger">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <h3 id="medicamentos-agotados">0</h3>
+                        <p>Medicamentos Agotados</p>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs">
+                    <div class="tab active" data-tab="critical">Medicamentos Críticos</div>
+                    <div class="tab" data-tab="movements">Últimos Movimientos</div>
+                    <div class="tab" data-tab="expiration">Alertas de Vencimiento</div>
+                </div>
+
+                <!-- Critical Tab Content -->
+                <div class="tab-content active" data-tab-content="critical">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Medicamento</th>
+                                    <th>Lote</th>
+                                    <th>Stock Actual</th>
+                                    <th>Stock Mínimo</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="critical-medications">
+                                <!-- Los medicamentos críticos se cargarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Movements Tab Content -->
+                <div class="tab-content" data-tab-content="movements">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Medicamento</th>
+                                    <th>Tipo</th>
+                                    <th>Cantidad</th>
+                                    <th>Usuario</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-movements">
+                                <!-- Los movimientos recientes se cargarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Expiration Tab Content -->
+                <div class="tab-content" data-tab-content="expiration">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Medicamento</th>
+                                    <th>Lote</th>
+                                    <th>Fecha Vencimiento</th>
+                                    <th>Días Restantes</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expiring-medications">
+                                <!-- Los medicamentos por vencer se cargarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Section -->
+            <div class="page-section" id="inventory">
+                <div class="page-title">
+                    <h1>Gestión de Inventario</h1>
+                    <button class="btn btn-primary" id="refreshInventoryBtn">
+                        <i class="fas fa-sync-alt"></i> Actualizar Inventario
+                    </button>
+                </div>
+                
+                <!-- Filtros de Inventario -->
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="filter-category">Filtrar por Categoría</label>
+                            <select id="filter-category" class="form-control">
+                                <option value="">Todas las categorías</option>
+                                <option value="analgesico">Analgésico</option>
+                                <option value="antibiotico">Antibiótico</option>
+                                <option value="antihistaminico">Antihistamínico</option>
+                                <option value="antiinflamatorio">Antiinflamatorio</option>
+                                <option value="otros">Otros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filter-status">Filtrar por Estado</label>
+                            <select id="filter-status" class="form-control">
+                                <option value="">Todos los estados</option>
+                                <option value="estable">Estable</option>
+                                <option value="bajo">Stock Bajo</option>
+                                <option value="critico">Crítico</option>
+                                <option value="agotado">Agotado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="search-inventory">Buscar Medicamento</label>
+                            <input type="text" id="search-inventory" class="form-control" placeholder="Nombre o lote...">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="applyFiltersBtn">Aplicar Filtros</button>
+                    <button class="btn" id="clearFiltersBtn" style="margin-left: 10px;">Limpiar Filtros</button>
+                </div>
+                
+                <!-- Tabla de Inventario -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Lote</th>
+                                <th>Categoría</th>
+                                <th>Stock Actual</th>
+                                <th>Stock Mínimo</th>
+                                <th>Estado</th>
+                                <th>Vencimiento</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table">
+                            <!-- Los medicamentos del inventario se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Movements Section -->
+            <div class="page-section" id="movements">
+                <div class="page-title">
+                    <h1>Registro de Movimientos</h1>
+                    <button class="btn btn-primary" id="newMovementBtn">
+                        <i class="fas fa-exchange-alt"></i> Nuevo Movimiento
+                    </button>
+                </div>
+                
+                <!-- Formulario de Movimientos -->
+                <div class="form-container" id="movement-form-container">
+                    <h3>Registrar Nuevo Movimiento</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="movement-type">Tipo de Movimiento</label>
+                            <select id="movement-type" class="form-control">
+                                <option value="">Seleccione tipo</option>
+                                <option value="entrada">Entrada</option>
+                                <option value="salida">Salida</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="movement-medication">Medicamento</label>
+                            <select id="movement-medication" class="form-control">
+                                <option value="">Seleccione medicamento</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="movement-quantity">Cantidad</label>
+                            <input type="number" id="movement-quantity" class="form-control" placeholder="0" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="movement-date">Fecha</label>
+                            <input type="date" id="movement-date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="movement-reason">Motivo</label>
+                        <input type="text" id="movement-reason" class="form-control" placeholder="Motivo del movimiento...">
+                    </div>
+                    <button class="btn btn-primary" id="saveMovementBtn">Registrar Movimiento</button>
+                </div>
+                
+                <!-- Tabla de Movimientos -->
+                <div class="table-container">
+                    <h3>Historial de Movimientos</h3>
+                    <div class="form-row" style="margin-bottom: 15px;">
+                        <div class="form-group">
+                            <label for="filter-movement-date">Filtrar por Fecha</label>
+                            <input type="date" id="filter-movement-date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="filter-movement-type">Filtrar por Tipo</label>
+                            <select id="filter-movement-type" class="form-control">
+                                <option value="">Todos los tipos</option>
+                                <option value="entrada">Entradas</option>
+                                <option value="salida">Salidas</option>
+                            </select>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Medicamento</th>
+                                <th>Lote</th>
+                                <th>Tipo</th>
+                                <th>Cantidad</th>
+                                <th>Motivo</th>
+                                <th>Usuario</th>
+                            </tr>
+                        </thead>
+                        <tbody id="movements-table">
+                            <!-- Los movimientos se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Kardex Section -->
+            <div class="page-section" id="kardex">
+                <div class="page-title">
+                    <h1>Kardex de Medicamentos</h1>
+                    <button class="btn btn-primary" id="exportKardexBtn">
+                        <i class="fas fa-download"></i> Exportar Reporte
+                    </button>
+                </div>
+                
+                <!-- Selección de Medicamento para Kardex -->
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="kardex-medication">Seleccionar Medicamento</label>
+                            <select id="kardex-medication" class="form-control">
+                                <option value="">Seleccione un medicamento</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="kardex-date-from">Desde</label>
+                            <input type="date" id="kardex-date-from" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="kardex-date-to">Hasta</label>
+                            <input type="date" id="kardex-date-to" class="form-control">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="generateKardexBtn">Generar Kardex</button>
+                </div>
+                
+                <!-- Información del Medicamento Seleccionado -->
+                <div class="card-container" id="kardex-medication-info" style="display: none;">
+                    <div class="card">
+                        <h3 id="kardex-med-name">-</h3>
+                        <p>Medicamento</p>
+                    </div>
+                    <div class="card">
+                        <h3 id="kardex-med-lote">-</h3>
+                        <p>Lote</p>
+                    </div>
+                    <div class="card">
+                        <h3 id="kardex-med-stock">0</h3>
+                        <p>Stock Actual</p>
+                    </div>
+                    <div class="card">
+                        <h3 id="kardex-med-min">0</h3>
+                        <p>Stock Mínimo</p>
+                    </div>
+                </div>
+                
+                <!-- Tabla de Kardex -->
+                <div class="table-container" id="kardex-table-container" style="display: none;">
+                    <h3>Movimientos del Medicamento</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Movimiento</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>Saldo</th>
+                                <th>Motivo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kardex-table">
+                            <!-- Los movimientos del kardex se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Alerts Section -->
+            <div class="page-section" id="alerts">
+                <div class="page-title">
+                    <h1>Alertas y Notificaciones</h1>
+                    <button class="btn btn-primary" id="configureAlertsBtn">
+                        <i class="fas fa-bell"></i> Configurar Alertas
+                    </button>
+                </div>
+                
+                <!-- Alertas de Stock Bajo -->
+                <div class="card">
+                    <h3><i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i> Alertas de Stock Bajo</h3>
+                    <div id="low-stock-alerts">
+                        <!-- Las alertas de stock bajo se cargarán aquí -->
+                    </div>
+                </div>
+                
+                <!-- Alertas de Vencimiento -->
+                <div class="card" style="margin-top: 20px;">
+                    <h3><i class="fas fa-calendar-times" style="color: var(--danger);"></i> Alertas de Vencimiento</h3>
+                    <div id="expiration-alerts">
+                        <!-- Las alertas de vencimiento se cargarán aquí -->
+                    </div>
+                </div>
+                
+                <!-- Configuración de Alertas -->
+                <div class="form-container" id="alerts-config" style="display: none;">
+                    <h3>Configuración de Alertas</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="alert-days-before">Días de anticipación para alertas de vencimiento</label>
+                            <input type="number" id="alert-days-before" class="form-control" value="30" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="alert-low-percentage">Porcentaje para alertas de stock bajo</label>
+                            <input type="number" id="alert-low-percentage" class="form-control" value="20" min="1" max="100">
+                            <small>Se alertará cuando el stock esté por debajo de este porcentaje del stock mínimo</small>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="saveAlertsConfigBtn">Guardar Configuración</button>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div class="page-section" id="reports">
+                <div class="page-title">
+                    <h1>Reportes y Estadísticas</h1>
+                    <button class="btn btn-primary" id="generateReportBtn">
+                        <i class="fas fa-chart-bar"></i> Generar Reporte
+                    </button>
+                </div>
+                
+                <!-- Opciones de Reporte -->
+                <div class="card-container">
+                    <div class="card report-option" data-report="inventory">
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h3>Reporte de Inventario</h3>
+                        <p>Reporte completo del inventario actual</p>
+                    </div>
+                    <div class="card report-option" data-report="movements">
+                        <div class="card-icon bg-success">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h3>Reporte de Movimientos</h3>
+                        <p>Movimientos por rango de fechas</p>
+                    </div>
+                    <div class="card report-option" data-report="consumption">
+                        <div class="card-icon bg-warning">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Reporte de Consumo</h3>
+                        <p>Estadísticas de consumo por medicamento</p>
+                    </div>
+                    <div class="card report-option" data-report="expiration">
+                        <div class="card-icon bg-danger">
+                            <i class="fas fa-calendar-times"></i>
+                        </div>
+                        <h3>Reporte de Vencimientos</h3>
+                        <p>Medicamentos próximos a vencer</p>
+                    </div>
+                </div>
+                
+                <!-- Parámetros del Reporte -->
+                <div class="form-container" id="report-params" style="display: none;">
+                    <h3 id="report-params-title">Parámetros del Reporte</h3>
+                    <div id="report-params-content">
+                        <!-- Los parámetros específicos del reporte se cargarán aquí -->
+                    </div>
+                    <button class="btn btn-primary" id="generateReportNowBtn">Generar Reporte</button>
+                </div>
+                
+                <!-- Resultado del Reporte -->
+                <div class="table-container" id="report-results" style="display: none;">
+                    <h3 id="report-results-title">Resultados del Reporte</h3>
+                    <div id="report-results-content">
+                        <!-- Los resultados del reporte se cargarán aquí -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="page-section" id="settings">
+                <div class="page-title">
+                    <h1>Configuración del Sistema</h1>
+                    <button class="btn btn-primary" id="saveSettingsBtn">
+                        <i class="fas fa-save"></i> Guardar Configuración
+                    </button>
+                </div>
+                
+                <!-- Configuración General -->
+                <div class="form-container">
+                    <h3>Configuración General</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="setting-institution">Nombre de la Institución</label>
+                            <input type="text" id="setting-institution" class="form-control" value="Instituto Valle Grande">
+                        </div>
+                        <div class="form-group">
+                            <label for="setting-department">Departamento/Área</label>
+                            <input type="text" id="setting-department" class="form-control" value="Tópico Médico">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="setting-backup">Frecuencia de Respaldo</label>
+                            <select id="setting-backup" class="form-control">
+                                <option value="diario">Diario</option>
+                                <option value="semanal" selected>Semanal</option>
+                                <option value="mensual">Mensual</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="setting-language">Idioma</label>
+                            <select id="setting-language" class="form-control">
+                                <option value="es" selected>Español</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gestión de Usuarios -->
+                <div class="form-container">
+                    <h3>Gestión de Usuarios</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Rol</th>
+                                    <th>Último Acceso</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table">
+                                <tr>
+                                    <td>admin@ivg.edu</td>
+                                    <td>Administrador</td>
+                                    <td>12/05/2023 14:30</td>
+                                    <td><span class="status status-success">Activo</span></td>
+                                    <td>
+                                        <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn"><i class="fas fa-key"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>enfermera@ivg.edu</td>
+                                    <td>Usuario</td>
+                                    <td>11/05/2023 09:15</td>
+                                    <td><span class="status status-success">Activo</span></td>
+                                    <td>
+                                        <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn"><i class="fas fa-key"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 15px;">
+                        <i class="fas fa-user-plus"></i> Agregar Usuario
+                    </button>
+                </div>
+                
+                <!-- Respaldo y Restauración -->
+                <div class="form-container">
+                    <h3>Respaldo y Restauración</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Respaldo de Datos</label>
+                            <p>Último respaldo: <span id="last-backup">12/05/2023 02:00</span></p>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-download"></i> Realizar Respaldo Ahora
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <label>Restaurar Datos</label>
+                            <input type="file" id="restore-file" class="form-control">
+                            <button class="btn" style="margin-top: 10px;">
+                                <i class="fas fa-upload"></i> Restaurar desde Archivo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding Medication -->
+    <div class="modal" id="addMedicationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Agregar Nuevo Medicamento</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-container" style="box-shadow: none; padding: 0;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="modal-name">Nombre del Medicamento</label>
+                        <input type="text" id="modal-name" class="form-control" placeholder="Ej: Paracetamol 500mg">
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-lote">Número de Lote</label>
+                        <input type="text" id="modal-lote" class="form-control" placeholder="Ej: PTM-2023-001">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="modal-quantity">Cantidad</label>
+                        <input type="number" id="modal-quantity" class="form-control" placeholder="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-min-stock">Stock Mínimo</label>
+                        <input type="number" id="modal-min-stock" class="form-control" placeholder="0" min="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="modal-expiration">Fecha de Vencimiento</label>
+                        <input type="date" id="modal-expiration" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-category">Categoría</label>
+                        <select id="modal-category" class="form-control">
+                            <option value="">Seleccionar categoría</option>
+                            <option value="analgesico">Analgésico</option>
+                            <option value="antibiotico">Antibiótico</option>
+                            <option value="antihistaminico">Antihistamínico</option>
+                            <option value="antiinflamatorio">Antiinflamatorio</option>
+                            <option value="otros">Otros</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-primary" style="width: 100%;" id="saveMedicationBtn">Guardar Medicamento</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-text">Operación realizada con éxito</span>
+    </div>
+
+    <script src="3.js"></script>
+</body>
+</html>
