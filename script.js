@@ -1,5 +1,5 @@
 // JavaScript separado - Funcionalidad de la aplicación
-
+console.log("JavaScript cargado correctamente");
 // Datos de ejemplo para la aplicación
 let medications = JSON.parse(localStorage.getItem('medications')) || [
     { 
@@ -1378,3 +1378,4 @@ function getPageName(pageId) {
     
     return pageNames[pageId] || pageId;
 }
+
